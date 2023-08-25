@@ -1,0 +1,13 @@
+
+##parence en el proyecto/
+
+
+docker-system prune -a
+
+docker build -t my-java-client ./client
+
+docker-compose up -d
+
+docker-compose logs
+
+docker-system prune -a

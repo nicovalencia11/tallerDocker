@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  server:
+    image: python:3.8
+    volumes:
+      - ./server:/app
+    ports:
+      - "80:80"
+    command: python /app/server.py
+
+  client:
+    image: my-java-client
+    environment:
+      - USUARIO=${USUARIO}
+
