@@ -10,7 +10,7 @@ services:
     command: python /app/server.py
 
   client:
-    image: my-java-client
+    image: myclient
     environment:
       - USUARIO=${USUARIO}
 
