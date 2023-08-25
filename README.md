@@ -14,20 +14,22 @@
 
 `docker cp bloque2.png apache:/usr/local/apache2/htdocs/`
 
-**Paso 4: ** Acceder al servidor Apache en tu navegador:
+**Paso 4:** Acceder al servidor Apache en tu navegador:
 
 Abre` localhost:8080 `en tu navegador.
 
 # Reto 2: Configuración de un proyecto Java con Docker Compose
 
-Paso 1: Crear una imagen Docker para el cliente Java:
+**Paso 1:** Crear una imagen Docker para el cliente Java:
 
 `docker build -t myclient ./client`
 
-Paso 2: Iniciar el proyecto con Docker Compose:
+**Paso 2:** Iniciar el proyecto con Docker Compose:
 
 `docker-compose up -d`
 
-Paso 3: Ver los registros del proyecto:
+**Paso 3:** Ver los registros del proyecto:
 
 `docker-compose logs`
+
+# Reto 3:
