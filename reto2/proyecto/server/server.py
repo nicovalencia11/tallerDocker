@@ -3,19 +3,6 @@ import urllib.parse
 import jwt
 import datetime
 
-print("hola mundo")
-
-# Clave secreta para firmar el JWT (cambia esto por una clave segura en un entorno de producción)
-
-
-# Datos que deseas incluir en el JWT
-
-
-print("JWT generado:")
-print(token)
-
-
-
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed_path = urllib.parse.urlparse(self.path)

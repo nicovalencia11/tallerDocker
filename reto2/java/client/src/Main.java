@@ -12,7 +12,8 @@ public class Main {
             System.out.println(e.getMessage());
         }
         try {
-            url = new URL("http://server:80?usuario=" + usuario);
+            url = new URL("http://server:80?usuario=" + usuario
+                    + "&correo=dobby@gmail.com");
             URLConnection con = url.openConnection();
             BufferedReader resultado = new BufferedReader(new java.io.InputStreamReader(con.getInputStream()));
             System.out.println(resultado.readLine());
