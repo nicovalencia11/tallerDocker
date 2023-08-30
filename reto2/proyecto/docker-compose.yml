@@ -14,7 +14,11 @@ services:
     container_name: my_client
     depends_on:
       - server
-    image: client
+    image: openjdk:11
+    volumes:
+      - ./client:/app
+    working_dir: /app
+    command: ["java", "-jar", "client.jar"]
     environment:
       - USUARIO=${USUARIO}
       - SERVER_URL=${SERVER_URL}
