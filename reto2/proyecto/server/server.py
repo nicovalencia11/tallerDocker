@@ -15,9 +15,7 @@ class MyServer(BaseHTTPRequestHandler):
 
             payload = {
                 "usuario": usuario,
-                "correo": correo,
-                "fecha": datetime.datetime.utcnow(),
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Token expira en 1 hora
+                "correo": correo
             }
 
             # Generar el JWT
@@ -26,7 +24,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            self.wfile.write(bytes(f'{jwt}', 'utf-8'))
+            self.wfile.write(bytes(f'{token}', 'utf-8'))
         else:
             self.send_response(400)
             self.send_header('Content-type', 'text/html')
