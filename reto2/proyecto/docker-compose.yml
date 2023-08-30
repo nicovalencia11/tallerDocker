@@ -2,15 +2,19 @@ version: '3'
 
 services:
   server:
+    container_name: my_server
     image: python:3.8
     volumes:
       - ./server:/app
     ports:
       - "80:80"
-    command: python /app/server.py
+    command: bash -c "pip install PyJWT && python /app/server.py"
 
   client:
-    image: myclient
+    container_name: my_client
+    depends_on:
+      - server
+    image: client
     environment:
       - USUARIO=${USUARIO}
-
+      - SERVER_URL=${SERVER_URL}
