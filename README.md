@@ -18,18 +18,23 @@
 
 Abre` localhost:8080 `en tu navegador.
 
-# Reto 2: Configuración de un proyecto Java con Docker Compose
+# Reto 2-3: Configuración de un proyecto Java con Docker Compose
+# Reto 4-5: Cree un programa que dados los datos básicos de un usuario genere un JWT.
 
 **Paso 1:** Crear una imagen Docker para el cliente Java:
 
-`docker build -t myclient ./client`
+`docker build -t client ./client`
 
 **Paso 2:** Iniciar el proyecto con Docker Compose:
 
 `docker-compose up -d`
 
-**Paso 3:** Ver los registros del proyecto:
+**Paso 3:** Ver los registros del cliente proyecto:
 
-`docker-compose logs`
+`docker start my_client`
 
-# Reto 3:
+`docker logs my_client`
+
+**Paso 4:** Ver los validar token generado con las variables de entorno:
+
+[https://jwt.io/](https://jwt.io/ "https://jwt.io/")
