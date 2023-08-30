@@ -19,7 +19,7 @@
 Abre` localhost:8080 `en tu navegador.
 
 # Reto 2-3-4-5: Configuración de un proyecto Java con Docker Compose - Cree un programa que dados los datos básicos de un usuario genere un JWT.
-*ubicarse en la carpeta proyecto*
+*ubicarse en la carpeta proyecto* `tallerDocker/reto2/proyecto`
 
 **Paso 1:** Iniciar el proyecto con Docker Compose:
 
