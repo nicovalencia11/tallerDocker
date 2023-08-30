@@ -1,5 +1,7 @@
 # Reto 1: Configuración de un servidor Apache con Docker
 
+*ubicarse en la carpeta del proyecto* `tallerDocker/reto1`
+
 **Paso 1:** Descargar la imagen de Docker para el servidor Apache:
 
 `docker pull httpd`
@@ -19,7 +21,8 @@
 Abre` localhost:8080 `en tu navegador.
 
 # Reto 2-3-4-5: Configuración de un proyecto Java con Docker Compose - Cree un programa que dados los datos básicos de un usuario genere un JWT.
-*ubicarse en la carpeta proyecto* `tallerDocker/reto2/proyecto`
+
+*ubicarse en la carpeta del proyecto* `tallerDocker/reto2/proyecto`
 
 **Paso 1:** Iniciar el proyecto con Docker Compose:
 
