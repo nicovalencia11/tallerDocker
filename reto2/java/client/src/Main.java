@@ -6,20 +6,23 @@ import java.net.URLConnection;
 public class Main {
     public static void main(String[] args) {
         String usuario = System.getenv().get("USUARIO");
-        String serverUrl = System.getenv().get("SERVER_URL"); // Obtener la URL del servidor desde la variable de entorno
+        String serverUrl = System.getenv().get("SERVER_URL");
 
-        if (usuario != null && serverUrl != null) {
-            try {
-                URL url = new URL("http://" + serverUrl + ":80?usuario=" + usuario
-                        + "&correo=dobby@gmail.com");
-                URLConnection con = url.openConnection();
-                BufferedReader resultado = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                System.out.println(resultado.readLine());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        } else {
-            System.out.println("Falta definir USUARIO y SERVER_URL en las variables de entorno.");
+        try {
+            // Esperar 4 segundos (4000 milisegundos)
+            Thread.sleep(4000);
+
+            URL url = new URL("http://" + serverUrl + ":80?usuario=" + usuario
+                    + "&correo=dobby@gmail.com");
+            URLConnection con = url.openConnection();
+            BufferedReader resultado = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            System.out.println(resultado.readLine());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("Thread interrupted");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }
+
