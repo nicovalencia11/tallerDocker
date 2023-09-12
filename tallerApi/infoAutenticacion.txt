@@ -1,0 +1,9 @@
+para la autenticacion se debe tener en cuenta la siguiente informacion:
+
+cedula: identificacion del usuario
+nombre completo: nombre completo del usuario
+correo: correo electronio del usuario
+telefono: telefono del usuario
+
+el motor de base de datos a utilizar es myqsl
+
