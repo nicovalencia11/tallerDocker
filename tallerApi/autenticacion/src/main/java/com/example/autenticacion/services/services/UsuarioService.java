@@ -1,6 +1,7 @@
 package com.example.autenticacion.services.services;
 
 import com.example.autenticacion.entities.Usuario;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public interface UsuarioService {
      * metodo que permite listar todos los usuarios
      * @return
      */
-    List<Usuario> listarUsuarios();
+    Page<Usuario> listarUsuarios(int pagina, int tamano);
 
     /**
      * Metodo que permite recuperar la clave con el correo

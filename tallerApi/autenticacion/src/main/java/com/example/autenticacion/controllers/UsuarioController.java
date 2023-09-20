@@ -4,6 +4,7 @@ import com.example.autenticacion.entities.Usuario;
 import com.example.autenticacion.services.implementation.UsuarioServiceImpl;
 import com.example.autenticacion.services.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,12 +45,15 @@ public class UsuarioController {
 
     /**
      * metodo para listar los usuarios
+     * @param pagina
+     * @param tamano
      * @return
      * @throws Exception
      */
     @GetMapping("/listar")
-    public List<Usuario> listar () throws Exception{
-       return usuarioService.listarUsuarios();
+    public Page<Usuario> listar (@RequestParam(name = "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name = "tamano", defaultValue = "10") int tamano) throws Exception{
+       return usuarioService.listarUsuarios(pagina, tamano);
     }
 
     /**

@@ -4,6 +4,9 @@ import com.example.autenticacion.entities.Usuario;
 import com.example.autenticacion.repositories.UsuarioRepository;
 import com.example.autenticacion.services.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,8 +69,9 @@ public class UsuarioServiceImpl implements UsuarioService {
      * @return
      */
     @Override
-    public List<Usuario> listarUsuarios() {
-        return usuarioRepository.findAll();
+    public Page<Usuario> listarUsuarios(int pagina, int tamano) {
+        Pageable pageable = PageRequest.of(pagina, tamano);
+        return usuarioRepository.findAll(pageable);
     }
 
     /**
