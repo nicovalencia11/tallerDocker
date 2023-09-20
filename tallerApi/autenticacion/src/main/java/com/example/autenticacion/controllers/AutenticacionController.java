@@ -28,18 +28,18 @@ public class AutenticacionController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody Usuario usuarioRequest) throws Exception {
-        System.out.println("ACAAAAAA" +usuarioRequest.getNombreUsuario());
         Usuario usuario = usuarioService.loginUsuario(usuarioRequest.getNombreUsuario(), usuarioRequest.getPassword());
         String token = AutenticacionController.generarTokenJWT(usuario);
+        usuario.setToken(token);
+        usuarioService.actualizarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 
     public static String generarTokenJWT(Usuario usuario) {
         String secretKey = "lUm27WtVunMb"; // Use una clave de seguridad más segura en un entorno de producción.
         long tiempoDeExpiracion = 1000 * 60 * 60 * 10; // 10 horas
-        System.out.println(usuario.getNombre());
         return Jwts.builder()
-                .setSubject(usuario.getNombre())
+                .setSubject(usuario.getNombreUsuario())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tiempoDeExpiracion))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
