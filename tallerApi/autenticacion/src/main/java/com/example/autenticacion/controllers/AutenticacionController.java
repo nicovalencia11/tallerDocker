@@ -22,23 +22,22 @@ public class AutenticacionController {
 
     /**
      * Metodo para realizar el login en el sistema
-     * @param nombreUsuario
-     * @param password
      * @return
      * @throws Exception
      */
 
     @PostMapping("/login")
-    public ResponseEntity<String> login (@RequestBody String nombreUsuario, String password) throws Exception {
-        Usuario usuario = usuarioService.loginUsuario(nombreUsuario, password);
+    public ResponseEntity<String> login (@RequestBody Usuario usuarioRequest) throws Exception {
+        System.out.println("ACAAAAAA" +usuarioRequest.getNombreUsuario());
+        Usuario usuario = usuarioService.loginUsuario(usuarioRequest.getNombreUsuario(), usuarioRequest.getPassword());
         String token = AutenticacionController.generarTokenJWT(usuario);
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 
     public static String generarTokenJWT(Usuario usuario) {
-        String secretKey = "lUm27W{:{tVunMb6c()£WD1-rjl6H9Kkvci[+<?q"; // Use una clave de seguridad más segura en un entorno de producción.
+        String secretKey = "lUm27WtVunMb"; // Use una clave de seguridad más segura en un entorno de producción.
         long tiempoDeExpiracion = 1000 * 60 * 60 * 10; // 10 horas
-
+        System.out.println(usuario.getNombre());
         return Jwts.builder()
                 .setSubject(usuario.getNombre())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
