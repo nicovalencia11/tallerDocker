@@ -37,10 +37,15 @@ public class UsuarioController {
      * @throws Exception
      */
     @PostMapping("/actualizar")
-    public ResponseEntity<String> actualizar (@RequestBody Usuario usuario) throws Exception{
-        usuarioService.actualizarUsuario(usuario);
-        //validar token
-        return ResponseEntity.status(HttpStatus.OK).body("Actualizacion Exitosa");
+    public ResponseEntity<String> actualizar (@RequestHeader("token") String token, @RequestBody Usuario usuario) throws Exception{
+        Usuario usuario1 = usuarioService.buscarUsuario(usuario);
+        usuario1.setPassword(usuario.getPassword());
+        if(token.equals(usuario1.getToken())){
+            usuarioService.actualizarUsuario(usuario1);
+            return ResponseEntity.status(HttpStatus.OK).body("Actualizacion Exitosa");
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No tienes permisos para actualizar este usuario");
+        }
     }
 
     /**

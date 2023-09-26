@@ -89,4 +89,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioSave;
     }
 
+    @Override
+    public Usuario buscarUsuario(Usuario usuario) throws Exception{
+        Usuario usuarioSave = usuarioRepository.findByCodigo(usuario.getCodigo());
+        if(usuarioSave == null){
+            throw new Exception("Error, el correo no fue encontrado");
+        }
+        return usuarioSave;
+    }
+
 }

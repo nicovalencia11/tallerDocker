@@ -27,6 +27,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
      */
     Usuario findByNombreUsuarioAndPassword(String usuario, String pass);
 
+    Usuario findByCodigo(int codigo);
+
     /**
      * buscar usuario por correo
      * @param correo

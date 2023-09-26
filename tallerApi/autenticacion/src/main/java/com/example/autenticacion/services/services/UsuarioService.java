@@ -45,4 +45,6 @@ public interface UsuarioService {
      */
     Usuario recuperarPassword(String correo) throws Exception;
 
+    Usuario buscarUsuario(Usuario usuario) throws Exception;
+
 }
