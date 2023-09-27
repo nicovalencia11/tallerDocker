@@ -24,7 +24,7 @@ public class UsuarioController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/registrar")
+    @PostMapping("/")
     public ResponseEntity<String> registrar (@RequestBody Usuario usuario) throws Exception{
         usuarioService.registrarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.OK).body("Resgistro Exitoso");
@@ -36,7 +36,7 @@ public class UsuarioController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/actualizar")
+    @PutMapping("/")
     public ResponseEntity<String> actualizar (@RequestHeader("token") String token, @RequestBody Usuario usuario) throws Exception{
         Usuario usuario1 = usuarioService.buscarUsuario(usuario);
         usuario1.setPassword(usuario.getPassword());
@@ -55,7 +55,7 @@ public class UsuarioController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/listar")
+    @GetMapping("/")
     public Page<Usuario> listar (@RequestParam(name = "pagina", defaultValue = "0") int pagina,
             @RequestParam(name = "tamano", defaultValue = "10") int tamano) throws Exception{
        return usuarioService.listarUsuarios(pagina, tamano);
