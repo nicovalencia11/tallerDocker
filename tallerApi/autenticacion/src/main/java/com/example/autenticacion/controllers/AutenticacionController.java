@@ -24,7 +24,7 @@ public class AutenticacionController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    private final String exchangeName = "tuExchange";
+    private final String exchangeName = "rootExchange";
     private final String routingKey = "tuRoutingKey";
 
     @PostMapping("/login")

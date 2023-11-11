@@ -1,21 +1,20 @@
 version: '3'
 
 services:
+  # Servicio de RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
 
+  # Servicio de aplicación en Go (Consumer-App)
   consumer-app:
     container_name: consumer-app
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-go
     depends_on:
       - rabbitmq
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
 
   

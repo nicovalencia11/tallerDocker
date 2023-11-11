@@ -1,5 +1,7 @@
 version: '3'
+
 services:
+  # Servicio de MySQL para Spring Boot
   mysql:
     image: mysql:latest
     environment:
@@ -7,23 +9,39 @@ services:
       MYSQL_DATABASE: autenticacion
     ports:
       - "3307:3306"
+
+  # Servicio de aplicación Spring Boot
   spring-app:
     container_name: spring_app
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-java
     depends_on:
       - mysql
+      - rabbitmq
     ports:
       - "8081:8080"
     environment:
       - spring.datasource.url=${SPRING_DATASOURCE_URL}
       - spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
       - spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
+      - spring.rabbitmq.host=${SPRING_RABBITMQ_HOST}
+      - spring.rabbitmq.port=${SPRING_RABBITMQ_PORT}
+      - spring.rabbitmq.username=${SPRING_RABBITMQ_USERNAME}
+      - spring.rabbitmq.password=${SPRING_RABBITMQ_PASSWORD}
 
+  # Servicio de RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
-
-#      - spring.rabbitmq.host=${SPRING_RABBITMQ_HOST}
-#      - spring.rabbitmq.port=${SPRING_RABBITMQ_PORT}
-#      - spring.rabbitmq.username=${SPRING_RABBITMQ_USERNAME}
-#      - spring.rabbitmq.password=${SPRING_RABBITMQ_PASSWORD}
+  # Servicio de aplicación en Go (Consumer-App)
+  consumer-app:
+    container_name: consumer-app
+    build:
+      context: .
+      dockerfile: Dockerfile-go
+    depends_on:
+      - rabbitmq

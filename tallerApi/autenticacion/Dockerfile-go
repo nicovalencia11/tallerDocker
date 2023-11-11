@@ -1,0 +1,30 @@
+# Usar la imagen oficial de Go
+FROM golang:1.16 as builder
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar los archivos go.mod y go.sum
+COPY logs/go.mod logs/go.sum ./
+
+# Descargar todas las dependencias
+RUN go mod download
+
+# Copiar el código fuente
+COPY logs .
+
+# Compilar la aplicación
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+# Crear una imagen ligera para ejecutar la aplicación
+FROM alpine:latest  
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# Copiar el ejecutable
+COPY --from=builder /app/main .
+
+# Ejecutar la aplicación
+CMD ["./main"]  

@@ -5,13 +5,13 @@ FROM golang:1.16 as builder
 WORKDIR /app
 
 # Copiar los archivos go.mod y go.sum
-COPY go.mod go.sum ./
+COPY logs/go.mod logs/go.sum ./
 
 # Descargar todas las dependencias
 RUN go mod download
 
 # Copiar el código fuente
-COPY . .
+COPY logs .
 
 # Compilar la aplicación
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .

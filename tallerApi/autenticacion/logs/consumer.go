@@ -20,7 +20,7 @@ func main() {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		"tuExchange", // name
+		"rootExchange", // name
 		"direct",     // type
 		true,         // durable
 		false,        // auto-deleted
@@ -47,7 +47,7 @@ func main() {
 	err = ch.QueueBind(
 		q.Name,         // queue name
 		"tuRoutingKey", // routing key
-		"tuExchange",   // exchange
+		"rootExchange",   // exchange
 		false,
 		nil,
 	)
