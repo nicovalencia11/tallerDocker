@@ -20,13 +20,13 @@ func main() {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		"tuExchange", // name
-		"direct",     // type
-		true,         // durable
-		false,        // auto-deleted
-		false,        // internal
-		false,        // no-wait
-		nil,          // arguments
+		"rootExchange", // name
+		"direct",       // type
+		true,           // durable
+		false,          // auto-deleted
+		false,          // internal
+		false,          // no-wait
+		nil,            // arguments
 	)
 	if err != nil {
 		log.Fatalf("Failed to declare an exchange: %s", err)
@@ -47,7 +47,7 @@ func main() {
 	err = ch.QueueBind(
 		q.Name,         // queue name
 		"tuRoutingKey", // routing key
-		"tuExchange",   // exchange
+		"rootExchange", // exchange
 		false,
 		nil,
 	)
