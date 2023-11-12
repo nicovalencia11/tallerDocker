@@ -1,12 +1,17 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/streadway/amqp"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
+	// Conexión a RabbitMQ
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
@@ -19,6 +24,7 @@ func main() {
 	}
 	defer ch.Close()
 
+	// Configuración de Exchange
 	err = ch.ExchangeDeclare(
 		"rootExchange", // name
 		"direct",       // type
@@ -32,6 +38,7 @@ func main() {
 		log.Fatalf("Failed to declare an exchange: %s", err)
 	}
 
+	// Declaración de Queue
 	q, err := ch.QueueDeclare(
 		"tuCola", // name
 		true,     // durable
@@ -44,6 +51,7 @@ func main() {
 		log.Fatalf("Failed to declare a queue: %s", err)
 	}
 
+	// Bind Queue
 	err = ch.QueueBind(
 		q.Name,         // queue name
 		"tuRoutingKey", // routing key
@@ -55,6 +63,7 @@ func main() {
 		log.Fatalf("Failed to bind a queue: %s", err)
 	}
 
+	// Consumir mensajes
 	msgs, err := ch.Consume(
 		q.Name, // queue
 		"",     // consumer
@@ -68,14 +77,57 @@ func main() {
 		log.Fatalf("Failed to register a consumer: %s", err)
 	}
 
-	forever := make(chan bool)
+	// Conexión a MongoDB
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(context.TODO())
 
+	// Obtén una lista de todas las bases de datos
+	databases, err := client.ListDatabaseNames(context.TODO(), bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Verifica si la base de datos deseada está en la lista
+	databaseExists := false
+	for _, db := range databases {
+		if db == "myDatabase" {
+			databaseExists = true
+			break
+		}
+	}
+
+	// Si la base de datos no existe, crea una insertando un documento en una colección
+	if !databaseExists {
+		collection := client.Database("myDatabase").Collection("messages")
+		_, err := collection.InsertOne(context.TODO(), bson.D{
+			{Key: "message", Value: "Initial message to create database"},
+		})
+		if err != nil {
+			log.Printf("Error al insertar mensaje en MongoDB: %s", err)
+		}
+	}
+
+	// Ahora puedes continuar con tu código normalmente
+	collection := client.Database("myDatabase").Collection("messages")
+
+	// Procesar mensajes
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+
+			// Insertar mensaje en MongoDB
+			_, err := collection.InsertOne(context.TODO(), bson.D{
+				{Key: "message", Value: string(d.Body)},
+			})
+			if err != nil {
+				log.Printf("Error al insertar mensaje en MongoDB: %s", err)
+			}
 		}
 	}()
 
 	log.Printf(" [*] Esperando mensajes. Para salir presiona CTRL+C")
-	<-forever
+	<-make(chan bool)
 }

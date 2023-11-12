@@ -8,6 +8,12 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  # Servicio de MongoDB
+  mongodb:
+    image: mongo
+    ports:
+      - "27018:27017"
+
   # Servicio de aplicación en Go (Consumer-App)
   consumer-app:
     container_name: consumer-app
@@ -16,5 +22,6 @@ services:
       dockerfile: Dockerfile-go
     depends_on:
       - rabbitmq
+      - mongodb
 
   
