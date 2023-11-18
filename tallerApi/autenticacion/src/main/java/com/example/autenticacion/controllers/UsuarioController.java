@@ -27,7 +27,7 @@ public class UsuarioController {
         try {
             usuarioService.registrarUsuario(usuario);
             // Enviar mensaje a RabbitMQ
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, "Usuario registrado: " + usuario.getNombreUsuario());
+            rabbitTemplate.convertAndSend(exchangeName, routingKey, "Exito Usuario registrado: " + usuario.getNombreUsuario());
             return ResponseEntity.status(HttpStatus.OK).body("Registro Exitoso");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar el usuario: " + e.getMessage());
@@ -41,10 +41,10 @@ public class UsuarioController {
         if (token.equals(usuarioActualizado.getToken())) {
             usuarioService.actualizarUsuario(usuarioActualizado);
             // Enviar mensaje a RabbitMQ
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, "Usuario actualizado: " + usuario.getNombreUsuario());
+            rabbitTemplate.convertAndSend(exchangeName, routingKey, "Exito Usuario actualizado: " + usuario.getNombreUsuario());
             return ResponseEntity.status(HttpStatus.OK).body("Actualización Exitosa");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No tienes permisos para actualizar este usuario");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error No tienes permisos para actualizar este usuario");
         }
     }
 
@@ -53,7 +53,7 @@ public class UsuarioController {
                                 @RequestParam(name = "tamano", defaultValue = "10") int tamano) throws Exception {
         Page<Usuario> usuarios = usuarioService.listarUsuarios(pagina, tamano);
         // Enviar mensaje a RabbitMQ
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, "Listado de usuarios solicitado");
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, "Exito Listado de usuarios solicitado");
         return usuarios;
     }
 
@@ -61,7 +61,7 @@ public class UsuarioController {
     public ResponseEntity<String> recuperarPassword(@RequestBody String correo) throws Exception {
         Usuario usuario = usuarioService.recuperarPassword(correo);
         // Enviar mensaje a RabbitMQ
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, "Recuperación de contraseña para: " + correo);
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, "Exito Recuperación de contraseña para: " + correo);
         return ResponseEntity.status(HttpStatus.OK).body("Tu clave es: " + usuario.getPassword());
     }
 }

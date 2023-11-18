@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"log"
+	"strings"
+	"time"
 
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/bson"
@@ -84,33 +86,6 @@ func main() {
 	}
 	defer client.Disconnect(context.TODO())
 
-	// Obtén una lista de todas las bases de datos
-	databases, err := client.ListDatabaseNames(context.TODO(), bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Verifica si la base de datos deseada está en la lista
-	databaseExists := false
-	for _, db := range databases {
-		if db == "myDatabase" {
-			databaseExists = true
-			break
-		}
-	}
-
-	// Si la base de datos no existe, crea una insertando un documento en una colección
-	if !databaseExists {
-		collection := client.Database("myDatabase").Collection("messages")
-		_, err := collection.InsertOne(context.TODO(), bson.D{
-			{Key: "message", Value: "Initial message to create database"},
-		})
-		if err != nil {
-			log.Printf("Error al insertar mensaje en MongoDB: %s", err)
-		}
-	}
-
-	// Ahora puedes continuar con tu código normalmente
 	collection := client.Database("myDatabase").Collection("messages")
 
 	// Procesar mensajes
@@ -118,9 +93,13 @@ func main() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
 
-			// Insertar mensaje en MongoDB
+			mensaje := string(d.Body)
+			tipo := determinarTipo(mensaje)
+
 			_, err := collection.InsertOne(context.TODO(), bson.D{
-				{Key: "message", Value: string(d.Body)},
+				{Key: "message", Value: mensaje},
+				{Key: "timestamp", Value: time.Now()},
+				{Key: "tipo", Value: tipo},
 			})
 			if err != nil {
 				log.Printf("Error al insertar mensaje en MongoDB: %s", err)
@@ -130,4 +109,14 @@ func main() {
 
 	log.Printf(" [*] Esperando mensajes. Para salir presiona CTRL+C")
 	<-make(chan bool)
+}
+
+// determinarTipo identifica el tipo de mensaje basado en su prefijo
+func determinarTipo(mensaje string) string {
+	if strings.HasPrefix(mensaje, "Exito") {
+		return "exito"
+	} else if strings.HasPrefix(mensaje, "Error") {
+		return "error"
+	}
+	return "desconocido" // Tipo por defecto si no coincide con los anteriores
 }

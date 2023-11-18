@@ -17,9 +17,10 @@ import (
 
 // Objeto representa la estructura de tus objetos en la colección MongoDB.
 type Objeto struct {
-	ID     string `json:"id" bson:"_id,omitempty"`
-	Nombre string `json:"message" bson:"message"`
-	// Agrega otros campos según sea necesario
+	ID        string    `json:"id" bson:"_id,omitempty"`
+	Nombre    string    `json:"message" bson:"message"`
+	Timestamp time.Time `json:"timestamp" bson:"timestamp"` // Fecha de creación
+	Tipo      string    `json:"tipo" bson:"tipo"`           // Tipo de log
 }
 
 // ListaObjetosPaginados devuelve una página de objetos desde la colección MongoDB.
@@ -37,26 +38,24 @@ func ListaObjetosPaginados(w http.ResponseWriter, r *http.Request) {
 	}
 	defer client.Disconnect(ctx)
 
-	// Accede a la colección MongoDB y obtiene los objetos paginados
 	collection := client.Database("myDatabase").Collection("messages")
 
-	// Parámetros de paginación
-	pageStr := r.URL.Query().Get("page")
-	page, err := strconv.Atoi(pageStr)
-	if err != nil || page < 1 {
-		page = 1
+	// Obtener parámetros de filtrado y paginación
+	page, limit, err := obtenerParametrosPaginacion(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	limitStr := r.URL.Query().Get("limit")
-	limit, err := strconv.Atoi(limitStr)
-	if err != nil || limit < 1 {
-		limit = 10
+	filtro, err := obtenerFiltro(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	// Opción para establecer el límite y la página
-	opts := options.Find().SetLimit(int64(limit)).SetSkip(int64((page - 1) * limit))
+	opts := options.Find().SetLimit(int64(limit)).SetSkip(int64((page - 1) * limit)).SetSort(bson.D{{"timestamp", 1}}) // Ordenar por fecha de creación
 
-	cur, err := collection.Find(ctx, bson.M{}, opts)
+	cur, err := collection.Find(ctx, filtro, opts)
 	if err != nil {
 		http.Error(w, "Error al obtener objetos desde MongoDB", http.StatusInternalServerError)
 		return
@@ -95,7 +94,52 @@ func ListaObjetosPaginados(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
-func main() {
+// obtenerParametrosPaginacion procesa los parámetros de paginación de la solicitud
+func obtenerParametrosPaginacion(r *http.Request) (int, int, error) {
+	pageStr := r.URL.Query().Get("page")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limitStr := r.URL.Query().Get("limit")
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	return page, limit, nil
+}
+
+// obtenerFiltro construye un filtro para la consulta MongoDB basado en los parámetros de la solicitud
+func obtenerFiltro(r *http.Request) (bson.M, error) {
+	filtro := bson.M{}
+
+	// Filtrar por tipo de log si está presente
+	tipo := r.URL.Query().Get("tipo")
+	if tipo != "" {
+		filtro["tipo"] = tipo
+	}
+
+	// Filtrar por rango de fechas si está presente
+	desde := r.URL.Query().Get("desde")
+	hasta := r.URL.Query().Get("hasta")
+	if desde != "" && hasta != "" {
+		desdeTime, err := time.Parse(time.RFC3339, desde)
+		if err != nil {
+			return nil, fmt.Errorf("formato de fecha 'desde' inválido: %s", err)
+		}
+		hastaTime, err := time.Parse(time.RFC3339, hasta)
+		if err != nil {
+			return nil, fmt.Errorf("formato de fecha 'hasta' inválido: %s", err)
+		}
+		filtro["timestamp"] = bson.M{"$gte": desdeTime, "$lte": hastaTime}
+	}
+
+	return filtro, nil
+}
+
+func main1() {
 	// Crea un enrutador usando Gorilla Mux
 	r := mux.NewRouter()
 
@@ -103,7 +147,7 @@ func main() {
 	r.HandleFunc("/logs", ListaObjetosPaginados).Methods("GET")
 
 	// Configura el servidor HTTP con el enrutador
-	port := 8081
+	port := 8090
 	fmt.Printf("Servidor escuchando en el puerto %d...\n", port)
 	http.Handle("/", r)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
