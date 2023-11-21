@@ -48,7 +48,7 @@ services:
     container_name: consumer-app
     build:
       context: .
-      dockerfile: Dockerfile-Cons
+      dockerfile: Dockerfile-Consu
     depends_on:
       - rabbitmq
       - mongodb
