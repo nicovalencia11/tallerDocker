@@ -17,10 +17,11 @@ import (
 
 // Objeto representa la estructura de tus objetos en la colección MongoDB.
 type Objeto struct {
-	ID        string    `json:"id" bson:"_id,omitempty"`
-	Nombre    string    `json:"message" bson:"message"`
-	Timestamp time.Time `json:"timestamp" bson:"timestamp"` // Fecha de creación
-	Tipo      string    `json:"tipo" bson:"tipo"`           // Tipo de log
+	ID          string    `json:"id" bson:"_id,omitempty"`
+	Nombre      string    `json:"message" bson:"message"`
+	Timestamp   time.Time `json:"timestamp" bson:"timestamp"` // Fecha de creación
+	Tipo        string    `json:"tipo" bson:"tipo"`           // Tipo de log
+	Application string    `json:"application" bson:"application"`
 }
 
 // ListaObjetosPaginados devuelve una página de objetos desde la colección MongoDB.
@@ -115,6 +116,12 @@ func obtenerParametrosPaginacion(r *http.Request) (int, int, error) {
 func obtenerFiltro(r *http.Request) (bson.M, error) {
 	filtro := bson.M{}
 
+	application := r.URL.Query().Get("application")
+	if application != "" {
+		// Si el parámetro 'application' está presente, añádelo al filtro
+		filtro["application"] = application
+	}
+
 	// Filtrar por tipo de log si está presente
 	tipo := r.URL.Query().Get("tipo")
 	if tipo != "" {
@@ -139,6 +146,46 @@ func obtenerFiltro(r *http.Request) (bson.M, error) {
 	return filtro, nil
 }
 
+func AgregarLog(w http.ResponseWriter, r *http.Request) {
+	// Configura la conexión a MongoDB
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(ctx)
+
+	collection := client.Database("myDatabase").Collection("messages")
+
+	// Decodificar el JSON del cuerpo de la solicitud
+	var nuevoLog Objeto
+	err = json.NewDecoder(r.Body).Decode(&nuevoLog)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Agregar timestamp si no está presente
+	if nuevoLog.Timestamp.IsZero() {
+		nuevoLog.Timestamp = time.Now()
+	}
+
+	// Insertar el nuevo log en MongoDB
+	_, err = collection.InsertOne(ctx, nuevoLog)
+	if err != nil {
+		http.Error(w, "Error al insertar log en MongoDB", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Log agregado exitosamente"))
+}
+
 func main() {
 	// Crea un enrutador usando Gorilla Mux
 	r := mux.NewRouter()
@@ -146,9 +193,12 @@ func main() {
 	// Define la ruta para el endpoint de listar objetos paginados
 	r.HandleFunc("/logs", ListaObjetosPaginados).Methods("GET")
 
+	// Define la ruta para el endpoint de agregar logs
+	r.HandleFunc("/logs", AgregarLog).Methods("POST")
+
 	// Configura el servidor HTTP con el enrutador
 	port := 8090
-	fmt.Printf("Servidor escuchando en el puerto %d...\n", port)
+	fmt.Printf("Servicio REST inicio: %d...\n", port)
 	http.Handle("/", r)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }

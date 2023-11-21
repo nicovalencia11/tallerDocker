@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"log"
@@ -10,7 +11,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/mock"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,7 +19,7 @@ import (
 // TestConexionMongoDB simula una prueba de conexión a MongoDB.
 func TestConexionMongoDB(t *testing.T) {
 	// Simular conexión a MongoDB.
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27018"))
 	if err != nil {
 		t.Fatalf("No se pudo conectar a MongoDB: %s", err)
 	}
@@ -66,7 +66,7 @@ func TestListaObjetosPaginados(t *testing.T) {
 
 }
 
-// TestFiltroLogs para el filtro de logs solo chequea que el tipo sea exito en todos los logs
+// TestFiltroLogs simula una prueba de filtrado de logs.
 func TestFiltroLogs(t *testing.T) {
 	// Conexión a MongoDB
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
@@ -89,57 +89,93 @@ func TestFiltroLogs(t *testing.T) {
 	}
 
 	// Verificar que los objetos retornados cumplen con el filtro aplicado.
+	exitosos := 0
+	errores := 0
 	for _, log := range logs {
 		mensaje := log["message"].(string)
-		if tipo := determinarTipo(mensaje); tipo != "exito" {
-			t.Errorf("El log no cumple con el filtro: got %v want %v", tipo, "exito")
+		tipo := determinarTipo(mensaje)
+		if tipo == "exito" {
+			exitosos++
+		} else if tipo == "error" {
+			errores++
 		}
 	}
-}
 
-// TestInsercionLog simula una prueba de inserción de un log en MongoDB.
-func TestInsercionLog(t *testing.T) {
-	mockCollection := new(MockMongoCollection)
-	mensaje := "Mensaje de prueba"
-	tipoMensaje := determinarTipo(mensaje)
+	if exitosos == 0 {
+		t.Errorf("No se encontraron logs de exito")
+	}
 
-	mockCollection.On("InsertOne", mock.Anything, bson.D{
-		{Key: "message", Value: mensaje},
-		{Key: "timestamp", Value: mock.AnythingOfType("time.Time")},
-		{Key: "tipo", Value: tipoMensaje},
-	}).Return(nil, nil)
-
-	err := insertarLogEnMongoDB(mockCollection, mensaje)
-	if err != nil {
-		t.Errorf("Error al insertar en MongoDB: %s", err)
+	if errores == 0 {
+		t.Errorf("No se encontraron logs de error")
 	}
 }
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------------
+// TestAgregarLog simula una prueba de inserción de logs.
+func TestAgregarLog(t *testing.T) {
+	// Crear un servidor HTTP de prueba
+	ts := httptest.NewServer(http.HandlerFunc(AgregarLog))
+	defer ts.Close()
 
-type MongoCollection interface {
-	InsertOne(ctx context.Context, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error)
-}
+	// Crear un objeto log para insertar
+	log := Objeto{
+		Nombre:      "Test log",
+		Timestamp:   time.Now(),
+		Tipo:        "exito",
+		Application: "Test app",
+	}
 
-func insertarLogEnMongoDB(collection MongoCollection, mensaje string) error {
-	tipo := determinarTipo(mensaje)
+	// Convertir el objeto log a JSON
+	jsonBytes, err := json.Marshal(log)
+	if err != nil {
+		t.Fatalf("Error al convertir el log a JSON: %s", err)
+	}
 
-	_, err := collection.InsertOne(context.TODO(), bson.D{
-		{Key: "message", Value: mensaje},
-		{Key: "timestamp", Value: time.Now()},
-		{Key: "tipo", Value: tipo},
-	})
+	// Crear un request POST
+	req, err := http.NewRequest("POST", ts.URL, bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		t.Fatalf("Error al crear el request: %s", err)
+	}
 
-	return err
-}
+	// Llamar a la función AgregarLog
+	rr := httptest.NewRecorder()
+	AgregarLog(rr, req)
 
-type MockMongoCollection struct {
-	mock.Mock
-}
+	// Verificar que la respuesta HTTP tenga el código de estado 201
+	if status := rr.Code; status != http.StatusCreated {
+		t.Errorf("AgregarLog devolvió un código de estado incorrecto: obtuvo %v, esperaba %v", status, http.StatusCreated)
+	}
 
-func (m *MockMongoCollection) InsertOne(ctx context.Context, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error) {
-	args := m.Called(ctx, document)
-	return args.Get(0).(*mongo.InsertOneResult), args.Error(1)
+	// Verificar que el cuerpo de la respuesta sea "Log agregado exitosamente"
+	expected := "Log agregado exitosamente"
+	if rr.Body.String() != expected {
+		t.Errorf("AgregarLog devolvió un cuerpo incorrecto: obtuvo %v, esperaba %v", rr.Body.String(), expected)
+	}
+	// Agregar un pequeño retraso para dar tiempo a que se complete la inserción
+	time.Sleep(2 * time.Second)
+
+	// Conectar a la base de datos MongoDB y verificar que el log se haya insertado correctamente
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		t.Fatalf("Error al conectar a MongoDB: %s", err)
+	}
+	err = client.Connect(context.Background())
+	if err != nil {
+		t.Fatalf("Error al conectar a MongoDB: %s", err)
+	}
+	collection := client.Database("myDatabase").Collection("messages")
+	filter := bson.M{"message": log.Nombre, "application": log.Application}
+	result := collection.FindOne(context.Background(), filter)
+	if result.Err() != nil {
+		t.Errorf("Error al buscar el log en MongoDB: %s", result.Err())
+	}
+	var foundLog Objeto
+	err = result.Decode(&foundLog)
+	if err != nil {
+		t.Errorf("Error al decodificar el log encontrado: %s", err)
+	}
+	if foundLog.Nombre != log.Nombre || foundLog.Application != log.Application {
+		t.Errorf("El log encontrado no coincide con el log insertado")
+	}
 }
 
 func determinarTipo(mensaje string) string {

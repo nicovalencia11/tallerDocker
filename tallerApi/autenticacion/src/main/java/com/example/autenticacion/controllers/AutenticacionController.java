@@ -36,13 +36,13 @@ public class AutenticacionController {
             usuarioService.actualizarUsuario(usuario);
 
             // Enviar mensaje de log exitoso a RabbitMQ
-            String logMessage = "Exito Login para el usuario: " + usuario.getNombreUsuario();
+            String logMessage = "Exito Login para el usuario: " + usuario.getNombreUsuario() + "Aut";
             rabbitTemplate.convertAndSend(exchangeName, routingKey, logMessage);
 
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (Exception e) {
             // Enviar mensaje de log fallido a RabbitMQ
-            String logMessage = "Error en el login para el usuario: " + usuarioRequest.getNombreUsuario();
+            String logMessage = "Error en el login para el usuario: " + usuarioRequest.getNombreUsuario() + "Aut";
             rabbitTemplate.convertAndSend(exchangeName, routingKey, logMessage);
 
             throw e;

@@ -95,11 +95,13 @@ func main() {
 
 			mensaje := string(d.Body)
 			tipo := determinarTipo(mensaje)
+			appId := extraerAppId(mensaje)
 
 			_, err := collection.InsertOne(context.TODO(), bson.D{
 				{Key: "message", Value: mensaje},
 				{Key: "timestamp", Value: time.Now()},
 				{Key: "tipo", Value: tipo},
+				{Key: "application", Value: appId},
 			})
 			if err != nil {
 				log.Printf("Error al insertar mensaje en MongoDB: %s", err)
@@ -111,12 +113,20 @@ func main() {
 	<-make(chan bool)
 }
 
-// determinarTipo identifica el tipo de mensaje basado en su prefijo
 func determinarTipo(mensaje string) string {
 	if strings.HasPrefix(mensaje, "Exito") {
 		return "exito"
 	} else if strings.HasPrefix(mensaje, "Error") {
 		return "error"
+	}
+	return "desconocido" // Tipo por defecto si no coincide con los anteriores
+}
+
+func extraerAppId(mensaje string) string {
+	if strings.Contains(mensaje, "Aut") {
+		return "aut"
+	} else if strings.Contains(mensaje, "Rest") {
+		return "rest"
 	}
 	return "desconocido" // Tipo por defecto si no coincide con los anteriores
 }
