@@ -53,7 +53,7 @@ func ListaObjetosPaginados(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	opts := options.Find().SetLimit(int64(limit)).SetSkip(int64((page - 1) * limit)).SetSort(bson.D{{"timestamp", 1}}) // Ordenar por fecha de creación
+	opts := options.Find().SetLimit(int64(limit)).SetSkip(int64((page - 1) * limit)).SetSort(bson.D{{"timestamp", 1}})
 
 	cur, err := collection.Find(ctx, filtro, opts)
 	if err != nil {

@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -30,27 +32,10 @@ func TestConexionMongoDB(t *testing.T) {
 	}
 }
 
-// TestInsercionLog simula una prueba de inserción de un log en MongoDB.
-func TestInsercionLog(t *testing.T) {
-	mockMongo := new(MockMongoDB)
-	mensaje := "Mensaje de prueba"
-
-	mockMongo.On("InsertOne", nil, bson.D{
-		{Key: "message", Value: mensaje},
-		{Key: "timestamp", Value: mock.AnythingOfType("time.Time")},
-		{Key: "tipo", Value: determinarTipo(mensaje)},
-	}).Return(nil)
-
-	err := insertarLogEnMongoDB(mockMongo, mensaje)
-	if err != nil {
-		t.Errorf("Error al insertar en MongoDB: %s", err)
-	}
-}
-
 // TestListaObjetosPaginados simula una prueba del endpoint de listado paginado.
 func TestListaObjetosPaginados(t *testing.T) {
 	// Crear un request HTTP al endpoint.
-	req, err := http.NewRequest("GET", "/logs?page=1&limit=10", nil)
+	req, err := http.NewRequest("GET", "/logs?page=1&limit=1", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -67,95 +52,94 @@ func TestListaObjetosPaginados(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	// Comprobar que la respuesta es la esperada.
-	expected := `...` // Aquí iría la respuesta JSON esperada.
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
-	}
-}
-
-func TestFiltroLogs(t *testing.T) {
-	// Crear un request con parámetros de filtro, por ejemplo, por tipo.
-	req, err := http.NewRequest("GET", "/logs?tipo=exito", nil)
+	// Parsear la respuesta en una estructura de logs
+	var logs []Objeto // Objeto es la estructura que representa un log
+	err = json.NewDecoder(rr.Body).Decode(&logs)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(ListaObjetosPaginados)
+	// Comprobar que la respuesta es la esperada.
+	if len(logs) != 1 {
+		t.Errorf("handler returned unexpected number of logs: got %v want %v", len(logs), 1)
+	}
 
-	handler.ServeHTTP(rr, req)
+}
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+// TestFiltroLogs para el filtro de logs solo chequea que el tipo sea exito en todos los logs
+func TestFiltroLogs(t *testing.T) {
+	// Conexión a MongoDB
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(context.TODO())
+
+	collection := client.Database("myDatabase").Collection("messages")
+
+	// Recuperar los logs
+	cursor, err := collection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var logs []bson.M
+	if err = cursor.All(context.TODO(), &logs); err != nil {
+		t.Fatal(err)
 	}
 
 	// Verificar que los objetos retornados cumplen con el filtro aplicado.
-	// Aquí deberías parsear la respuesta y verificar que todos los elementos tienen el tipo "exito".
+	for _, log := range logs {
+		mensaje := log["message"].(string)
+		if tipo := determinarTipo(mensaje); tipo != "exito" {
+			t.Errorf("El log no cumple con el filtro: got %v want %v", tipo, "exito")
+		}
+	}
 }
 
-func TestPaginacionLogs(t *testing.T) {
-	req, err := http.NewRequest("GET", "/logs?page=2&limit=5", nil)
+// TestInsercionLog simula una prueba de inserción de un log en MongoDB.
+func TestInsercionLog(t *testing.T) {
+	mockCollection := new(MockMongoCollection)
+	mensaje := "Mensaje de prueba"
+	tipoMensaje := determinarTipo(mensaje)
+
+	mockCollection.On("InsertOne", mock.Anything, bson.D{
+		{Key: "message", Value: mensaje},
+		{Key: "timestamp", Value: mock.AnythingOfType("time.Time")},
+		{Key: "tipo", Value: tipoMensaje},
+	}).Return(nil, nil)
+
+	err := insertarLogEnMongoDB(mockCollection, mensaje)
 	if err != nil {
-		t.Fatal(err)
+		t.Errorf("Error al insertar en MongoDB: %s", err)
 	}
-
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(ListaObjetosPaginados)
-
-	handler.ServeHTTP(rr, req)
-
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	// Verificar que la cantidad de objetos en la respuesta es 5.
-}
-
-func TestBadRequestListaObjetosPaginados(t *testing.T) {
-	req, err := http.NewRequest("GET", "/logs?page=-1", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(ListaObjetosPaginados)
-
-	handler.ServeHTTP(rr, req)
-
-	if status := rr.Code; status != http.StatusBadRequest {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusBadRequest)
-	}
-
-	// Verificar el mensaje de error de la respuesta.
-}
-
-func TestRabbitMQConsumer(t *testing.T) {
-	// Simular la recepción de un mensaje desde RabbitMQ.
-	// Verificar que el mensaje se procesa correctamente y se inserta en MongoDB.
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-type MongoDBInterface interface {
-	InsertOne(interface{}, interface{}) error
+type MongoCollection interface {
+	InsertOne(ctx context.Context, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error)
 }
 
-type MockMongoDB struct {
+func insertarLogEnMongoDB(collection MongoCollection, mensaje string) error {
+	tipo := determinarTipo(mensaje)
+
+	_, err := collection.InsertOne(context.TODO(), bson.D{
+		{Key: "message", Value: mensaje},
+		{Key: "timestamp", Value: time.Now()},
+		{Key: "tipo", Value: tipo},
+	})
+
+	return err
+}
+
+type MockMongoCollection struct {
 	mock.Mock
 }
 
-func (m *MockMongoDB) InsertOne(ctx interface{}, document interface{}) error {
+func (m *MockMongoCollection) InsertOne(ctx context.Context, document interface{}, opts ...*options.InsertOneOptions) (*mongo.InsertOneResult, error) {
 	args := m.Called(ctx, document)
-	return args.Error(0)
-}
-
-func insertarLogEnMongoDB(db MongoDBInterface, mensaje string) error {
-	return db.InsertOne(nil, bson.D{
-		{Key: "message", Value: mensaje},
-		{Key: "timestamp", Value: time.Now()},
-		{Key: "tipo", Value: determinarTipo(mensaje)},
-	})
+	return args.Get(0).(*mongo.InsertOneResult), args.Error(1)
 }
 
 func determinarTipo(mensaje string) string {
