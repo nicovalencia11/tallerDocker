@@ -26,7 +26,7 @@ type Objeto struct {
 // ListaObjetosPaginados devuelve una página de objetos desde la colección MongoDB.
 func ListaObjetosPaginados(w http.ResponseWriter, r *http.Request) {
 	// Configura la conexión a MongoDB
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongodb:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -139,7 +139,7 @@ func obtenerFiltro(r *http.Request) (bson.M, error) {
 	return filtro, nil
 }
 
-func main1() {
+func main() {
 	// Crea un enrutador usando Gorilla Mux
 	r := mux.NewRouter()
 

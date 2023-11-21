@@ -10,12 +10,12 @@ services:
     ports:
       - "3307:3306"
 
-  # Servicio de aplicación Spring Boot
+  # Servicio de aplicación Spring Boot (Productor-App)
   spring-app:
     container_name: spring_app
     build:
       context: .
-      dockerfile: Dockerfile-java
+      dockerfile: Dockerfile-Autent
     depends_on:
       - mysql
       - rabbitmq
@@ -48,7 +48,18 @@ services:
     container_name: consumer-app
     build:
       context: .
-      dockerfile: Dockerfile-go
+      dockerfile: Dockerfile-Cons
     depends_on:
       - rabbitmq
       - mongodb
+
+    # Servicio de aplicación en Go (REST-App)
+  rest-app:
+    container_name: rest-app
+    build:
+      context: .
+      dockerfile: Dockerfile-REST
+    depends_on:
+      - mongodb
+    ports:
+      - "8091:8090"

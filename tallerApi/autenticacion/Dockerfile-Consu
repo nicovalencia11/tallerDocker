@@ -11,7 +11,7 @@ COPY logs/go.mod logs/go.sum ./
 RUN go mod download
 
 # Copiar el código fuente
-COPY logs .
+COPY logs/logs .
 
 # Compilar la aplicación
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
