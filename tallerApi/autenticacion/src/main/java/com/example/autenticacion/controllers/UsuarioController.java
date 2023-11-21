@@ -30,6 +30,7 @@ public class UsuarioController {
             rabbitTemplate.convertAndSend(exchangeName, routingKey, "Exito Usuario registrado: " + usuario.getNombreUsuario());
             return ResponseEntity.status(HttpStatus.OK).body("Registro Exitoso");
         } catch (Exception e) {
+            rabbitTemplate.convertAndSend(exchangeName, routingKey, "Error al registrar el usuario: " + usuario.getNombreUsuario());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar el usuario: " + e.getMessage());
         }
     }
@@ -44,7 +45,8 @@ public class UsuarioController {
             rabbitTemplate.convertAndSend(exchangeName, routingKey, "Exito Usuario actualizado: " + usuario.getNombreUsuario());
             return ResponseEntity.status(HttpStatus.OK).body("Actualización Exitosa");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error No tienes permisos para actualizar este usuario");
+            rabbitTemplate.convertAndSend(exchangeName, routingKey, "Error al Actualizar Usuario: " + usuario.getNombreUsuario());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No tienes permisos para actualizar este usuario");
         }
     }
 

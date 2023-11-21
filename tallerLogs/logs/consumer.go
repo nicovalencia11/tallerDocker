@@ -80,7 +80,7 @@ func main() {
 	}
 
 	// Conexión a MongoDB
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("localhost://mongodb:27017"))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -135,7 +135,7 @@ func TestRabbitMQConsumer(t *testing.T) {
 	// Verificar que el mensaje se procesa correctamente y se inserta en MongoDB.
 }
 
-// ----------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 type MongoDBInterface interface {
 	InsertOne(interface{}, interface{}) error
