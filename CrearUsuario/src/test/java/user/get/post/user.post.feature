@@ -2,14 +2,14 @@
 Feature: Crear  un usuario nuevo
 
   Background: Endpoint y datos para registro de usuario
-    * url "http://localhost:8080/api/v1/usuario/"
+    * url "http://localhost:8081/api/v1/usuario/"
     * request { "nombre": "#(nombre)", "nombreUsuario": "#(nombreUsuario)", "password": "#(password)", "correo": "#(correo)" }
 
   @CP1
   Scenario Outline: Validar que al Ingresar los datos correspondientes permita crear el nuevo usuario
     When method post
     Then status 200
-    And match response == 'Resgistro Exitoso'
+    And match response == 'Registro Exitoso'
     Examples:
       | nombre   | nombreUsuario | password | correo              |
       | nicotrin | nicotrin      | 123456   | nicotrin@correo.com |

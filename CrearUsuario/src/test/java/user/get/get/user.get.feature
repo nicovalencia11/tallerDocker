@@ -1,4 +1,4 @@
-Feature: get user on regres
+Feature: obtener todos los usuarios
 
   Scenario: Get a user
     Given url "http://localhost:8080/api/v1/usuario/"
