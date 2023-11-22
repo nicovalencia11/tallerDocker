@@ -69,7 +69,7 @@ func TestListaObjetosPaginados(t *testing.T) {
 // TestFiltroLogs simula una prueba de filtrado de logs.
 func TestFiltroLogs(t *testing.T) {
 	// Conexión a MongoDB
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27018"))
 	if err != nil {
 		log.Fatal(err)
 	}

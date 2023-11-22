@@ -11,7 +11,7 @@ Feature: loggin de un usuario en el sistema
     Then status 200
     Examples:
       | nombreUsuario | password |
-      | nicovalencia11      | 123456   |
+      | nicotrin      | 123456   |
 
   @CP1
   Scenario Outline: Validar que al Ingresar los datos incorrectos no permita el loggin al usuario
@@ -19,4 +19,4 @@ Feature: loggin de un usuario en el sistema
     Then status 500
     Examples:
       | nombreUsuario | password |
-      | nicovalencia11      | 1234567   |
+      | nicotrin      | 1234576|

@@ -5,10 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2463b5d6-b87a-4430-a0b8-9d0565bb6c08" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tallerApi/autenticacion/logs/paginacion.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tallerApi/autenticacion/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../tallerApi/autenticacion/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tallerLogs/logs/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../tallerLogs/logs/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tallerLogs/logs/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../tallerLogs/logs/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/user/get/get/user.get.feature" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/user/get/get/user.get.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/user/get/post/login.post.feature" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/user/get/post/login.post.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/user/get/post/user.post.feature" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/user/get/post/user.post.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/karate-summary-json.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/karate-reports/karate-summary-json.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/karate-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/karate-reports/karate-summary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/karate-tags.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/karate-reports/karate-tags.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/karate-timeline.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/karate-reports/karate-timeline.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/res/vis.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/karate-reports/res/vis.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/src.test.java.user.get.post.user.post.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/karate-reports/src.test.java.user.get.post.user.post.karate-json.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tallerLogs/REST/logs_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/../tallerLogs/REST/logs_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,27 +30,169 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2YHgXcyZIH5ylaKHEschyFqN0cN" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Uniquindio/Microservicios/taller final/talleresMicroservicios/CrearUsuario",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/danie/Development/talleresMicroservicios/CrearUsuario&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager" selected="Cucumber Java.Scenario: Validar que al Ingresar los datos incorrectos no permita el loggin al usuario">
+    <configuration name="Scenario: Validar que al Ingresar los datos correspondientes permita crear el nuevo usuario" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
+      <option name="CUCUMBER_CORE_VERSION" value="1.2" />
+      <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/java/user/get/post/user.post.feature" />
+      <option name="GLUE" value="com.intuit.karate" />
+      <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
+      <module name="CrearUsuario.test" />
+      <option name="NAME_FILTER" value="^Validar que al Ingresar los datos correspondientes permita crear el nuevo usuario$" />
+      <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome --name &quot;^Validar que al Ingresar los datos correspondientes permita crear el nuevo usuario$&quot;" />
+      <option name="SUGGESTED_NAME" value="Scenario: Validar que al Ingresar los datos correspondientes permita crear el nuevo usuario" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cucumber.api.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scenario: Validar que al Ingresar los datos correspondientes permita el loggin al usuario" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
+      <option name="CUCUMBER_CORE_VERSION" value="1.2" />
+      <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/java/user/get/post/login.post.feature" />
+      <option name="GLUE" value="com.intuit.karate" />
+      <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
+      <module name="CrearUsuario.test" />
+      <option name="NAME_FILTER" value="^Validar que al Ingresar los datos correspondientes permita el loggin al usuario$" />
+      <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome --name &quot;^Validar que al Ingresar los datos correspondientes permita el loggin al usuario$&quot;" />
+      <option name="SUGGESTED_NAME" value="Scenario: Validar que al Ingresar los datos correspondientes permita el loggin al usuario" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cucumber.api.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scenario: Validar que al Ingresar los datos incorrectos no permita el loggin al usuario" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
+      <option name="CUCUMBER_CORE_VERSION" value="1.2" />
+      <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/java/user/get/post/login.post.feature" />
+      <option name="GLUE" value="com.intuit.karate" />
+      <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
+      <module name="CrearUsuario.test" />
+      <option name="NAME_FILTER" value="^Validar que al Ingresar los datos incorrectos no permita el loggin al usuario$" />
+      <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome --name &quot;^Validar que al Ingresar los datos incorrectos no permita el loggin al usuario$&quot;" />
+      <option name="SUGGESTED_NAME" value="Scenario: Validar que al Ingresar los datos incorrectos no permita el loggin al usuario" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cucumber.api.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scenario: Validar que no permita registrar el usuario con campos obligatorios vacios" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
+      <option name="CUCUMBER_CORE_VERSION" value="1.2" />
+      <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/java/user/get/post/user.post.feature" />
+      <option name="GLUE" value="com.intuit.karate" />
+      <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
+      <module name="CrearUsuario.test" />
+      <option name="NAME_FILTER" value="^Validar que no permita registrar el usuario con campos obligatorios vacios$" />
+      <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome --name &quot;^Validar que no permita registrar el usuario con campos obligatorios vacios$&quot;" />
+      <option name="SUGGESTED_NAME" value="Scenario: Validar que no permita registrar el usuario con campos obligatorios vacios" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cucumber.api.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scenario: Validar que no permita registrar el usuario con resgitros duplicados" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
+      <option name="CUCUMBER_CORE_VERSION" value="1.2" />
+      <option name="FILE_PATH" value="$PROJECT_DIR$/src/test/java/user/get/post/user.post.feature" />
+      <option name="GLUE" value="com.intuit.karate" />
+      <option name="MAIN_CLASS_NAME" value="cucumber.api.cli.Main" />
+      <module name="CrearUsuario.test" />
+      <option name="NAME_FILTER" value="^Validar que no permita registrar el usuario con resgitros duplicados$" />
+      <option name="PROGRAM_PARAMETERS" value=" --plugin org.jetbrains.plugins.cucumber.java.run.CucumberJvmSMFormatter --monochrome --name &quot;^Validar que no permita registrar el usuario con resgitros duplicados$&quot;" />
+      <option name="SUGGESTED_NAME" value="Scenario: Validar que no permita registrar el usuario con resgitros duplicados" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cucumber.api.cli.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cucumber Java.Scenario: Validar que al Ingresar los datos incorrectos no permita el loggin al usuario" />
+        <item itemvalue="Cucumber Java.Scenario: Validar que al Ingresar los datos correspondientes permita el loggin al usuario" />
+        <item itemvalue="Cucumber Java.Scenario: Validar que no permita registrar el usuario con resgitros duplicados" />
+        <item itemvalue="Cucumber Java.Scenario: Validar que no permita registrar el usuario con campos obligatorios vacios" />
+        <item itemvalue="Cucumber Java.Scenario: Validar que al Ingresar los datos correspondientes permita crear el nuevo usuario" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -50,7 +202,14 @@
       <option name="presentableId" value="Default" />
       <updated>1700187961140</updated>
       <workItem from="1700187962287" duration="294000" />
+      <workItem from="1700612692816" duration="70000" />
+      <workItem from="1700612859993" duration="1407000" />
+      <workItem from="1700614290356" duration="4000" />
+      <workItem from="1700635345356" duration="34000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

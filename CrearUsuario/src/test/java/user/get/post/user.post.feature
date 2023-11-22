@@ -28,7 +28,7 @@ Feature: Crear  un usuario nuevo
     Then status 500
     Examples:
       | nombre | nombreUsuario | password | correo           |
-      | july   | julys         | 123456   | nuevo@correo.com |
+      | july   | julys         | 123456   | nicotrin@correo.com |
 
   @CP4
   Scenario Outline: Validar que no permita guardar al exceder el tamanio permitido al campo nombre
