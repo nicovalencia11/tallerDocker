@@ -19,9 +19,18 @@ services:
     container_name: consumer-app
     build:
       context: .
-      dockerfile: Dockerfile-go
+      dockerfile: Dockerfile-Cons
     depends_on:
       - rabbitmq
       - mongodb
 
-  
+    # Servicio de aplicación en Go (REST-App)
+  rest-app:
+    container_name: rest-app
+    build:
+      context: .
+      dockerfile: Dockerfile-REST
+    depends_on:
+      - mongodb
+    ports:
+      - "8091:8090"

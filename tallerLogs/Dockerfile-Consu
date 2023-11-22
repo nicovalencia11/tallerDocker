@@ -5,7 +5,7 @@ FROM golang:1.16 as builder
 WORKDIR /app
 
 # Copiar los archivos go.mod y go.sum
-COPY logs/go.mod logs/go.sum ./
+COPY go.mod go.sum ./
 
 # Descargar todas las dependencias
 RUN go mod download

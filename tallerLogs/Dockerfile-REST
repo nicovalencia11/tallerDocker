@@ -1,0 +1,33 @@
+# Utiliza la imagen oficial de Go como base
+FROM golang:1.16 as builder
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia los archivos go.mod y go.sum para descargar dependencias
+COPY go.mod go.sum ./
+
+# Descarga todas las dependencias
+RUN go mod download
+
+# Copia el código fuente
+COPY REST .
+
+# Compila la aplicación
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+# Crea una imagen ligera para ejecutar la aplicación
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# Copia el ejecutable desde la etapa de compilación
+COPY --from=builder /app/main .
+
+# Ejecuta la aplicación al iniciar el contenedor
+CMD ["./main"]
+
+# Expose port 8090 to the outside world
+EXPOSE 8090
